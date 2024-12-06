@@ -73,6 +73,7 @@
       cursor: pointer;
       user-select: none;
       border-radius: 4px;
+      position: relative; /* To position the dragged item */
     }
 
     .grid-item.over {
@@ -161,7 +162,11 @@
         const draggedItem = document.getElementById(draggedItemId);
 
         if (!gridItem.hasChildNodes()) {
+          // Keep the size of the dragged item
           gridItem.appendChild(draggedItem);
+          // Optionally, you can apply additional styles here if needed to position the item inside the grid cell
+          draggedItem.style.width = draggedItem.offsetWidth + 'px';
+          draggedItem.style.height = draggedItem.offsetHeight + 'px';
         }
       });
     }
