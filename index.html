@@ -19,16 +19,16 @@
 
     /* Left panel where draggable items are */
     .draggable-container {
-      width: 100px;
+      width: 200px;
       padding: 10px;
       border: 2px solid #333;
       border-radius: 8px;
       background-color: #f7f7f7;
     }
 
-    .belt {
-      width: 25px;
-      height: 25px;
+    .draggable-item {
+      width: 150px;
+      height: 50px;
       background-color: lightblue;
       border: 1px solid #333;
       margin: 10px 0;
@@ -38,21 +38,14 @@
       cursor: grab;
       user-select: none;
       border-radius: 4px;
+      padding: 5px;
+      box-sizing: border-box;
     }
 
-    .assembling-machine {
-      width: 75px;
-      height: 75px;
-      background-color: lightblue;
-      border: 1px solid #333;
-      margin: 10px 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: grab;
-      user-select: none;
-      border-radius: 4px;
-    }    
+    .draggable-item img {
+      width: 30px; /* Adjust as needed */
+      height: 30px; /* Adjust as needed */
+    }
 
     .draggable-item:active {
       cursor: grabbing;
@@ -61,8 +54,8 @@
     /* The 10x10 grid */
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(20, 25px);
-      grid-template-rows: repeat(20, 25px);
+      grid-template-columns: repeat(10, 50px);
+      grid-template-rows: repeat(10, 50px);
       gap: 5px;
       width: 540px;
       height: 540px;
@@ -73,8 +66,8 @@
     }
 
     .grid-item {
-      width: 25px;
-      height: 25px;
+      width: 50px;
+      height: 50px;
       background-color: lightgray;
       border: 1px solid #ccc;
       display: flex;
@@ -88,6 +81,17 @@
     .grid-item.over {
       background-color: lightgreen;
     }
+
+    /* Custom sizes for draggable items */
+    .large-item {
+      width: 200px;
+      height: 100px;
+    }
+
+    .small-item {
+      width: 100px;
+      height: 30px;
+    }
   </style>
 </head>
 <body>
@@ -95,10 +99,7 @@
   <h1>Drag and Drop to the 10x10 Grid</h1>
 
   <div class="draggable-container" id="draggable-container">
-    <div class="belt" draggable="true" id="belt">Belt</div>
-    <div class="assembling-machine" draggable="true" id="am1">AM</div>
-    <div class="draggable-item" draggable="true" id="item3">Inserter</div>
-    <div class="draggable-item" draggable="true" id="item4">Power Pole</div>
+    <!-- Draggable items will be generated here by JavaScript -->
   </div>
 
   <div class="grid-container" id="grid">
@@ -106,14 +107,46 @@
   </div>
 
   <script>
-    // Select all draggable items and grid container
-    const draggableItems = document.querySelectorAll('.draggable-item');
-    const gridContainer = document.getElementById('grid');
+    // Example data for different types of draggable items with custom sizes
+    const draggableItemsData = [
+      { id: 'item1', label: 'Item 1', imgSrc: 'https://via.placeholder.com/30', size: 'normal' },
+      { id: 'item2', label: 'Item 2', imgSrc: 'https://via.placeholder.com/30', size: 'large' },
+      { id: 'item3', label: 'Item 3', imgSrc: 'https://via.placeholder.com/30', size: 'small' },
+      { id: 'item4', label: 'Item 4', imgSrc: 'https://via.placeholder.com/30', size: 'normal' },
+      { id: 'item5', label: 'Item 5', imgSrc: 'https://via.placeholder.com/30', size: 'large' },
+      // Add more items as needed
+    ];
+
+    // Generate draggable items dynamically
     const draggableContainer = document.getElementById('draggable-container');
+    draggableItemsData.forEach(itemData => {
+      const draggableItem = document.createElement('div');
+      draggableItem.classList.add('draggable-item', itemData.size === 'large' ? 'large-item' : itemData.size === 'small' ? 'small-item' : '');
+      draggableItem.id = itemData.id;
+      draggableItem.draggable = true;
+
+      const img = document.createElement('img');
+      img.src = itemData.imgSrc;
+      img.alt = itemData.label;
+
+      const label = document.createElement('span');
+      label.textContent = itemData.label;
+
+      draggableItem.appendChild(img);
+      draggableItem.appendChild(label);
+
+      draggableContainer.appendChild(draggableItem);
+
+      // Add dragstart event listener
+      draggableItem.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text', e.target.id);
+      });
+    });
 
     // Dynamically generate grid items (10x10)
-    const rows = 20;
-    const cols = 20;
+    const gridContainer = document.getElementById('grid');
+    const rows = 10;
+    const cols = 10;
     const totalItems = rows * cols;
 
     for (let i = 0; i < totalItems; i++) {
@@ -122,43 +155,29 @@
       gridItem.id = `grid-item-${i + 1}`;
       gridItem.setAttribute('data-id', i + 1);
       gridContainer.appendChild(gridItem);
-    }
 
-    // Make draggable items draggable
-    draggableItems.forEach(item => {
-      item.addEventListener('dragstart', (e) => {
-        // Store the ID of the dragged item in the dataTransfer object
-        e.dataTransfer.setData('text', e.target.id);
-      });
-    });
-
-    // Allow grid items to be droppable
-    const gridItems = document.querySelectorAll('.grid-item');
-    gridItems.forEach(item => {
-      item.addEventListener('dragover', (e) => {
-        e.preventDefault(); // Necessary to allow dropping
-        item.classList.add('over');
+      // Add drop event listener
+      gridItem.addEventListener('dragover', (e) => {
+        e.preventDefault(); // Allow dropping
+        gridItem.classList.add('over');
       });
 
-      item.addEventListener('dragleave', () => {
-        item.classList.remove('over');
+      gridItem.addEventListener('dragleave', () => {
+        gridItem.classList.remove('over');
       });
 
-      item.addEventListener('drop', (e) => {
+      gridItem.addEventListener('drop', (e) => {
         e.preventDefault();
-        item.classList.remove('over');
+        gridItem.classList.remove('over');
 
-        // Get the dragged item's ID
         const draggedItemId = e.dataTransfer.getData('text');
         const draggedItem = document.getElementById(draggedItemId);
 
-        // Check if the grid cell is empty
-        if (!item.hasChildNodes()) {
-          // Append the dragged item to the grid cell
-          item.appendChild(draggedItem);
+        if (!gridItem.hasChildNodes()) {
+          gridItem.appendChild(draggedItem);
         }
       });
-    });
+    }
 
     // Allow the draggable items to be dragged back to the container
     draggableContainer.addEventListener('dragover', (e) => {
@@ -167,19 +186,15 @@
 
     draggableContainer.addEventListener('drop', (e) => {
       e.preventDefault();
-      
-      // Get the dragged item's ID
+
       const draggedItemId = e.dataTransfer.getData('text');
       const draggedItem = document.getElementById(draggedItemId);
 
-      // Check if the dragged item is already in the grid
       const gridItem = document.querySelector(`#${draggedItemId}`);
       if (gridItem && gridItem.parentNode.classList.contains('grid-item')) {
-        // Remove the item from the grid if it's already there
         gridItem.parentNode.removeChild(draggedItem);
       }
 
-      // Re-append the item to the draggable container
       draggableContainer.appendChild(draggedItem);
     });
   </script>
