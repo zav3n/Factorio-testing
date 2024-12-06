@@ -10,11 +10,13 @@
       margin: 20px;
       display: flex;
       justify-content: space-between;
+      flex-direction: column; /* Ensure the elements stack vertically */
     }
 
     h1 {
       text-align: center;
       width: 100%;
+      margin-bottom: 20px; /* Add space below the header */
     }
 
     /* Left panel where draggable items are */
@@ -24,6 +26,7 @@
       border: 2px solid #333;
       border-radius: 8px;
       background-color: #f7f7f7;
+      margin-bottom: 20px; /* Add margin to separate it from the grid */
     }
 
     .draggable-item {
@@ -40,14 +43,14 @@
       border-radius: 4px;
       padding: 5px;
       box-sizing: border-box;
-      background-size: cover; /* Ensures image fills the box */
-      background-position: center; /* Centers the image inside the div */
+      background-size: cover;
+      background-position: center;
     }
 
     .draggable-item img {
-      width: 100%; /* Image fills the entire width of the item */
-      height: 100%; /* Image fills the entire height of the item */
-      object-fit: cover; /* Ensure image scales to fill without distortion */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .draggable-item:active {
@@ -62,11 +65,11 @@
       gap: 0px; /* Remove gaps between grid items */
       width: 540px;
       height: 540px;
-      margin-left: 20px;
-      border: 0px solid #333; /* Remove border */
-      padding: 0px; /* Remove padding */
+      margin-top: 20px; /* Add margin to space it from the draggable items */
+      border: 2px solid #333;
+      padding: 0px;
       background-color: #f7f7f7;
-      position: relative; /* Ensure that the grid can contain absolutely positioned elements */
+      position: relative;
     }
 
     .grid-item {
