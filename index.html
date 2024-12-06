@@ -80,7 +80,7 @@
 
   <h1>Drag and Drop to the 10x10 Grid</h1>
 
-  <div class="draggable-container">
+  <div class="draggable-container" id="draggable-container">
     <div class="draggable-item" draggable="true" id="item1">Item 1</div>
     <div class="draggable-item" draggable="true" id="item2">Item 2</div>
     <div class="draggable-item" draggable="true" id="item3">Item 3</div>
@@ -89,24 +89,27 @@
   </div>
 
   <div class="grid-container" id="grid">
-    <!-- 100 grid items -->
-    <div class="grid-item" id="grid-item-1" data-id="1"></div>
-    <div class="grid-item" id="grid-item-2" data-id="2"></div>
-    <div class="grid-item" id="grid-item-3" data-id="3"></div>
-    <div class="grid-item" id="grid-item-4" data-id="4"></div>
-    <div class="grid-item" id="grid-item-5" data-id="5"></div>
-    <div class="grid-item" id="grid-item-6" data-id="6"></div>
-    <div class="grid-item" id="grid-item-7" data-id="7"></div>
-    <div class="grid-item" id="grid-item-8" data-id="8"></div>
-    <div class="grid-item" id="grid-item-9" data-id="9"></div>
-    <div class="grid-item" id="grid-item-10" data-id="10"></div>
-    <!-- Repeat for 100 grid items (10x10) -->
+    <!-- Grid items will be dynamically generated here -->
   </div>
 
   <script>
-    // Select all draggable items
+    // Select all draggable items and grid container
     const draggableItems = document.querySelectorAll('.draggable-item');
-    const gridItems = document.querySelectorAll('.grid-item');
+    const gridContainer = document.getElementById('grid');
+    const draggableContainer = document.getElementById('draggable-container');
+
+    // Dynamically generate grid items (10x10)
+    const rows = 10;
+    const cols = 10;
+    const totalItems = rows * cols;
+
+    for (let i = 0; i < totalItems; i++) {
+      const gridItem = document.createElement('div');
+      gridItem.classList.add('grid-item');
+      gridItem.id = `grid-item-${i + 1}`;
+      gridItem.setAttribute('data-id', i + 1);
+      gridContainer.appendChild(gridItem);
+    }
 
     // Make draggable items draggable
     draggableItems.forEach(item => {
@@ -117,6 +120,7 @@
     });
 
     // Allow grid items to be droppable
+    const gridItems = document.querySelectorAll('.grid-item');
     gridItems.forEach(item => {
       item.addEventListener('dragover', (e) => {
         e.preventDefault(); // Necessary to allow dropping
@@ -128,7 +132,7 @@
       });
 
       item.addEventListener('drop', (e) => {
-        e.preventDefault(); // Prevent default action (e.g., open as link for some browsers)
+        e.preventDefault();
         item.classList.remove('over');
 
         // Get the dragged item's ID
@@ -141,6 +145,29 @@
           item.appendChild(draggedItem);
         }
       });
+    });
+
+    // Allow the draggable items to be dragged back to the container
+    draggableContainer.addEventListener('dragover', (e) => {
+      e.preventDefault(); // Allow dropping into the container
+    });
+
+    draggableContainer.addEventListener('drop', (e) => {
+      e.preventDefault();
+      
+      // Get the dragged item's ID
+      const draggedItemId = e.dataTransfer.getData('text');
+      const draggedItem = document.getElementById(draggedItemId);
+
+      // Check if the dragged item is already in the grid
+      const gridItem = document.querySelector(`#${draggedItemId}`);
+      if (gridItem && gridItem.parentNode.classList.contains('grid-item')) {
+        // Remove the item from the grid if it's already there
+        gridItem.parentNode.removeChild(draggedItem);
+      }
+
+      // Re-append the item to the draggable container
+      draggableContainer.appendChild(draggedItem);
     });
   </script>
 
