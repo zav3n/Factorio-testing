@@ -27,7 +27,7 @@
     }
 
     .draggable-item {
-      width: 50px;
+      width: 150px;
       height: 50px;
       background-color: lightblue;
       border: 1px solid #333;
@@ -42,6 +42,12 @@
       box-sizing: border-box;
       background-size: cover; /* Ensures image fills the box */
       background-position: center; /* Centers the image inside the div */
+    }
+
+    .draggable-item img {
+      width: 100%; /* Image fills the entire width of the item */
+      height: 100%; /* Image fills the entire height of the item */
+      object-fit: cover; /* Ensure image scales to fill without distortion */
     }
 
     .draggable-item:active {
