@@ -66,6 +66,7 @@
       border: 0px solid #333; /* Remove border */
       padding: 0px; /* Remove padding */
       background-color: #f7f7f7;
+      position: relative; /* Ensure that the grid can contain absolutely positioned elements */
     }
 
     .grid-item {
@@ -95,6 +96,7 @@
       width: 25px;
       height: 25px;
     }
+
   </style>
 </head>
 <body>
@@ -133,6 +135,18 @@
       // Add dragstart event listener
       draggableItem.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text', e.target.id);
+
+        // Make sure the dragged item stays on top by changing its z-index and position
+        draggableItem.style.position = 'absolute';  // Position the item absolutely
+        draggableItem.style.zIndex = 1000;  // Ensure it's above the grid
+        draggableItem.style.pointerEvents = 'none'; // Optional: Disable interaction with the grid while dragging
+      });
+
+      // Add dragend event listener to reset the item's style when dragging ends
+      draggableItem.addEventListener('dragend', (e) => {
+        draggableItem.style.position = ''; // Reset the position
+        draggableItem.style.zIndex = '';  // Reset the z-index
+        draggableItem.style.pointerEvents = ''; // Reset pointer events
       });
     });
 
@@ -167,36 +181,4 @@
         const draggedItem = document.getElementById(draggedItemId);
 
         if (!gridItem.hasChildNodes()) {
-          // Append the dragged item and ensure its size doesn't change
-          gridItem.appendChild(draggedItem);
-
-          // Ensuring the item keeps its size after being dropped (important)
-          draggedItem.style.width = ''; // Reset width, ensuring it's its original size
-          draggedItem.style.height = ''; // Reset height, ensuring it's its original size
-        }
-      });
-    }
-
-    // Allow the draggable items to be dragged back to the container
-    draggableContainer.addEventListener('dragover', (e) => {
-      e.preventDefault(); // Allow dropping into the container
-    });
-
-    draggableContainer.addEventListener('drop', (e) => {
-      e.preventDefault();
-
-      const draggedItemId = e.dataTransfer.getData('text');
-      const draggedItem = document.getElementById(draggedItemId);
-
-      // Remove the dragged item from the grid before appending it back to the container
-      const gridItem = document.querySelector(`#${draggedItemId}`);
-      if (gridItem && gridItem.parentNode.classList.contains('grid-item')) {
-        gridItem.parentNode.removeChild(draggedItem);
-      }
-
-      draggableContainer.appendChild(draggedItem);
-    });
-  </script>
-
-</body>
-</html>
+          // Append
