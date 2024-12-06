@@ -42,9 +42,10 @@
       box-sizing: border-box;
     }
 
-    }.draggable-item img {
+    .draggable-item img {
       width: 100%;  /* Image scales to the full width of the item */
       height: 100%; /* Image scales to the full height of the item */
+      object-fit: contain; /* Ensures the image fits without distortion */
     }
 
     .draggable-item:active {
@@ -140,7 +141,7 @@
       });
     });
 
-    // Dynamically generate grid items (10x10)
+    // Dynamically generate grid items (20x20)
     const gridContainer = document.getElementById('grid');
     const rows = 20;
     const cols = 20;
@@ -187,6 +188,7 @@
       const draggedItemId = e.dataTransfer.getData('text');
       const draggedItem = document.getElementById(draggedItemId);
 
+      // Remove the dragged item from the grid before appending it back to the container
       const gridItem = document.querySelector(`#${draggedItemId}`);
       if (gridItem && gridItem.parentNode.classList.contains('grid-item')) {
         gridItem.parentNode.removeChild(draggedItem);
