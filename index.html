@@ -21,17 +21,18 @@
 
     /* Left panel where draggable items are */
     .draggable-container {
-      width: 200px;
+      width: 540px; /* Default size for 20x20 grid */
+      height: 540px; /* Default size for 20x20 grid */
       padding: 10px;
       border: 2px solid #333;
       border-radius: 8px;
       background-color: #f7f7f7;
       margin-bottom: 20px; /* Add margin to separate it from the grid */
+      display: flex;
+      flex-wrap: wrap; /* Allow the items to wrap inside */
     }
 
     .draggable-item {
-      width: 150px;
-      height: 50px;
       background-color: lightblue;
       border: 1px solid #333;
       margin: 10px 0;
@@ -57,14 +58,10 @@
       cursor: grabbing;
     }
 
-    /* The 20x20 grid */
+    /* The dynamic grid container */
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(20, 25px);
-      grid-template-rows: repeat(20, 25px);
-      gap: 0px; /* Remove gaps between grid items */
-      width: 540px;
-      height: 540px;
+      grid-gap: 0px; /* Remove gaps between grid items */
       margin-top: 20px; /* Add margin to space it from the draggable items */
       border: 2px solid #333;
       padding: 0px;
@@ -73,8 +70,6 @@
     }
 
     .grid-item {
-      width: 25px;
-      height: 25px;
       background-color: lightgray;
       display: flex;
       justify-content: center;
@@ -104,7 +99,7 @@
 </head>
 <body>
 
-  <h1>Drag and Drop to the 20x20 Grid</h1>
+  <h1>Drag and Drop to the Grid</h1>
 
   <div class="draggable-container" id="draggable-container">
     <!-- Draggable items will be generated here by JavaScript -->
@@ -122,43 +117,16 @@
       // Add more items as needed
     ];
 
-    // Generate draggable items dynamically
-    const draggableContainer = document.getElementById('draggable-container');
-    draggableItemsData.forEach(itemData => {
-      const draggableItem = document.createElement('div');
-      draggableItem.classList.add('draggable-item', itemData.size === 'large' ? 'large-item' : itemData.size === 'small' ? 'small-item' : '');
-      draggableItem.id = itemData.id;
-      draggableItem.draggable = true;
+    const rows = 20; // Rows in the grid
+    const cols = 20; // Columns in the grid
+    const totalItems = rows * cols; // Total grid items
 
-      // Set image as background of the draggable item
-      draggableItem.style.backgroundImage = `url(${itemData.imgSrc})`;
-
-      draggableContainer.appendChild(draggableItem);
-
-      // Add dragstart event listener
-      draggableItem.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text', e.target.id);
-
-        // Make sure the dragged item stays on top by changing its z-index and position
-        draggableItem.style.position = 'absolute';  // Position the item absolutely
-        draggableItem.style.zIndex = 1000;  // Ensure it's above the grid
-        draggableItem.style.pointerEvents = 'none'; // Optional: Disable interaction with the grid while dragging
-      });
-
-      // Add dragend event listener to reset the item's style when dragging ends
-      draggableItem.addEventListener('dragend', (e) => {
-        draggableItem.style.position = ''; // Reset the position
-        draggableItem.style.zIndex = '';  // Reset the z-index
-        draggableItem.style.pointerEvents = ''; // Reset pointer events
-      });
-    });
-
-    // Dynamically generate grid items (20x20)
+    // Set grid styles dynamically based on the grid size
     const gridContainer = document.getElementById('grid');
-    const rows = 20;
-    const cols = 20;
-    const totalItems = rows * cols;
+    gridContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`; // Set columns based on the grid size
+    gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`; // Set rows based on the grid size
 
+    // Dynamically generate grid items based on rows and columns
     for (let i = 0; i < totalItems; i++) {
       const gridItem = document.createElement('div');
       gridItem.classList.add('grid-item');
@@ -196,6 +164,46 @@
         }
       });
     }
+
+    // Dynamically calculate the size of the draggable container based on the grid size
+    const draggableContainer = document.getElementById('draggable-container');
+    const gridItemSize = 25; // Size of each grid item (adjust to your grid's cell size)
+    const containerWidth = cols * gridItemSize;
+    const containerHeight = rows * gridItemSize;
+
+    // Update the draggable container size to match the grid's size
+    draggableContainer.style.width = `${containerWidth}px`;
+    draggableContainer.style.height = `${containerHeight}px`;
+
+    // Generate draggable items dynamically
+    draggableItemsData.forEach(itemData => {
+      const draggableItem = document.createElement('div');
+      draggableItem.classList.add('draggable-item', itemData.size === 'large' ? 'large-item' : itemData.size === 'small' ? 'small-item' : '');
+      draggableItem.id = itemData.id;
+      draggableItem.draggable = true;
+
+      // Set image as background of the draggable item
+      draggableItem.style.backgroundImage = `url(${itemData.imgSrc})`;
+
+      draggableContainer.appendChild(draggableItem);
+
+      // Add dragstart event listener
+      draggableItem.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text', e.target.id);
+
+        // Make sure the dragged item stays on top by changing its z-index and position
+        draggableItem.style.position = 'absolute';  // Position the item absolutely
+        draggableItem.style.zIndex = 1000;  // Ensure it's above the grid
+        draggableItem.style.pointerEvents = 'none'; // Optional: Disable interaction with the grid while dragging
+      });
+
+      // Add dragend event listener to reset the item's style when dragging ends
+      draggableItem.addEventListener('dragend', (e) => {
+        draggableItem.style.position = ''; // Reset the position
+        draggableItem.style.zIndex = '';  // Reset the z-index
+        draggableItem.style.pointerEvents = ''; // Reset pointer events
+      });
+    });
 
     // Allow the draggable items to be dragged back to the container
     draggableContainer.addEventListener('dragover', (e) => {
