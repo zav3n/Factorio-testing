@@ -181,4 +181,39 @@
         const draggedItem = document.getElementById(draggedItemId);
 
         if (!gridItem.hasChildNodes()) {
-          // Append
+          // Append the dragged item to the grid
+          gridItem.appendChild(draggedItem);
+
+          // Ensure the item keeps its original size after dropping
+          draggedItem.style.width = ''; // Reset width to its original size
+          draggedItem.style.height = ''; // Reset height to its original size
+
+          // Optionally, reset the position style after it’s dropped
+          draggedItem.style.position = ''; // Keep it inside the grid cell
+        }
+      });
+    }
+
+    // Allow the draggable items to be dragged back to the container
+    draggableContainer.addEventListener('dragover', (e) => {
+      e.preventDefault(); // Allow dropping into the container
+    });
+
+    draggableContainer.addEventListener('drop', (e) => {
+      e.preventDefault();
+
+      const draggedItemId = e.dataTransfer.getData('text');
+      const draggedItem = document.getElementById(draggedItemId);
+
+      // Remove the dragged item from the grid before appending it back to the container
+      const gridItem = document.querySelector(`#${draggedItemId}`);
+      if (gridItem && gridItem.parentNode.classList.contains('grid-item')) {
+        gridItem.parentNode.removeChild(draggedItem);
+      }
+
+      draggableContainer.appendChild(draggedItem);
+    });
+  </script>
+
+</body>
+</html>
