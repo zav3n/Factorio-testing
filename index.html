@@ -3,78 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SortableJS Drag and Drop Example</title>
+  <title>Sortable 10x10 Grid</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
+      text-align: center;
     }
 
     h1 {
       text-align: center;
     }
 
-    .container {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(10, 50px); /* 10 columns, each 50px wide */
+      grid-template-rows: repeat(10, 50px); /* 10 rows, each 50px tall */
+      gap: 5px; /* Space between the grid items */
+      justify-items: center;
       margin-top: 40px;
+      width: 540px; /* 10 columns × 50px + gap */
+      height: 540px; /* 10 rows × 50px + gap */
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .sortable-list {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      width: 250px;
-      border: 2px dashed #333;
-      padding: 10px;
-      background-color: #f7f7f7;
-    }
-
-    .sortable-item {
+    .grid-item {
+      width: 50px;
+      height: 50px;
       background-color: lightblue;
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin: 5px 0;
+      border: 2px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
       cursor: grab;
-      text-align: center;
+      user-select: none;
+      border-radius: 4px;
     }
 
-    .sortable-item:active {
+    .grid-item:active {
       cursor: grabbing;
     }
 
-    .sortable-item:focus {
-      outline: none;
+    .sortable-ghost {
+      opacity: 0.5; /* Transparent ghost effect when dragging */
     }
   </style>
 </head>
 <body>
 
-  <h1>Sortable List with SortableJS</h1>
+  <h1>Sortable 10x10 Grid</h1>
 
-  <div class="container">
-    <!-- List of items that are draggable -->
-    <ul id="sortable1" class="sortable-list">
-      <li class="sortable-item" data-id="1">Item 1</li>
-      <li class="sortable-item" data-id="2">Item 2</li>
-      <li class="sortable-item" data-id="3">Item 3</li>
-      <li class="sortable-item" data-id="4">Item 4</li>
-      <li class="sortable-item" data-id="5">Item 5</li>
-    </ul>
+  <div class="grid-container" id="sortableGrid">
+    <!-- 100 grid items -->
+    <!-- Loop through 100 items using JS -->
   </div>
 
   <!-- Include SortableJS from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
   <script>
-    // Initialize the sortable list
-    new Sortable(document.getElementById('sortable1'), {
-      animation: 150, // Adds smooth transition when dragging items
-      ghostClass: 'sortable-ghost', // Class for the item while dragging
-      dragClass: 'sortable-drag', // Class for the item being dragged
-    });
-  </script>
-
-</body>
-</html>
+    // Create 100 grid items and append them to the grid container
+    const gri
