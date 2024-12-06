@@ -27,7 +27,7 @@
     }
 
     .draggable-item {
-      width: 50px;
+      width: 150px;
       height: 50px;
       background-color: lightblue;
       border: 1px solid #333;
@@ -162,11 +162,14 @@
         const draggedItem = document.getElementById(draggedItemId);
 
         if (!gridItem.hasChildNodes()) {
-          // Keep the size of the dragged item
+          // Append the dragged item and ensure its size doesn't change
           gridItem.appendChild(draggedItem);
-          // Optionally, you can apply additional styles here if needed to position the item inside the grid cell
-          // draggedItem.style.width = draggedItem.offsetWidth + 'px';
-          // draggedItem.style.height = draggedItem.offsetHeight + 'px';
+
+          // Explicitly set the dragged item's dimensions to its original size
+          const sizeClass = draggedItem.classList.contains('large-item') ? 'large-item' : 'small-item';
+          draggedItem.style.width = ''; // Reset any width set during drag/drop
+          draggedItem.style.height = ''; // Reset any height set during drag/drop
+          draggedItem.classList.add(sizeClass);
         }
       });
     }
