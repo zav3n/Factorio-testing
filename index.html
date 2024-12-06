@@ -3,82 +3,144 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sortable 10x10 Grid</title>
+  <title>Drag and Drop Grid</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
     }
 
     h1 {
       text-align: center;
+      width: 100%;
     }
 
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(10, 50px); /* 10 columns, each 50px wide */
-      grid-template-rows: repeat(10, 50px); /* 10 rows, each 50px tall */
-      gap: 5px; /* Space between the grid items */
-      justify-items: center;
-      margin-top: 40px;
-      width: 540px; /* 10 columns × 50px + gap */
-      height: 540px; /* 10 rows × 50px + gap */
-      margin-left: auto;
-      margin-right: auto;
+    /* Left panel where draggable items are */
+    .draggable-container {
+      width: 200px;
+      padding: 10px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background-color: #f7f7f7;
     }
 
-    .grid-item {
-      width: 50px;
+    .draggable-item {
+      width: 150px;
       height: 50px;
       background-color: lightblue;
-      border: 2px solid #333;
+      border: 1px solid #333;
+      margin: 10px 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 14px;
       cursor: grab;
       user-select: none;
       border-radius: 4px;
     }
 
-    .grid-item:active {
+    .draggable-item:active {
       cursor: grabbing;
     }
 
-    .sortable-ghost {
-      opacity: 0.5; /* Transparent ghost effect when dragging */
+    /* The 10x10 grid */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(10, 50px);
+      grid-template-rows: repeat(10, 50px);
+      gap: 5px;
+      width: 540px;
+      height: 540px;
+      margin-left: 20px;
+      border: 2px solid #333;
+      padding: 10px;
+      background-color: #f7f7f7;
+    }
+
+    .grid-item {
+      width: 50px;
+      height: 50px;
+      background-color: lightgray;
+      border: 1px solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 4px;
+    }
+
+    .grid-item.over {
+      background-color: lightgreen;
     }
   </style>
 </head>
 <body>
 
-  <h1>Sortable 10x10 Grid</h1>
+  <h1>Drag and Drop to the 10x10 Grid</h1>
 
-  <div class="grid-container" id="sortableGrid">
-    <!-- 100 grid items -->
-    <!-- Loop through 100 items using JS -->
+  <div class="draggable-container">
+    <div class="draggable-item" draggable="true" id="item1">Item 1</div>
+    <div class="draggable-item" draggable="true" id="item2">Item 2</div>
+    <div class="draggable-item" draggable="true" id="item3">Item 3</div>
+    <div class="draggable-item" draggable="true" id="item4">Item 4</div>
+    <div class="draggable-item" draggable="true" id="item5">Item 5</div>
   </div>
 
-  <!-- Include SortableJS from CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+  <div class="grid-container" id="grid">
+    <!-- 100 grid items -->
+    <div class="grid-item" id="grid-item-1" data-id="1"></div>
+    <div class="grid-item" id="grid-item-2" data-id="2"></div>
+    <div class="grid-item" id="grid-item-3" data-id="3"></div>
+    <div class="grid-item" id="grid-item-4" data-id="4"></div>
+    <div class="grid-item" id="grid-item-5" data-id="5"></div>
+    <div class="grid-item" id="grid-item-6" data-id="6"></div>
+    <div class="grid-item" id="grid-item-7" data-id="7"></div>
+    <div class="grid-item" id="grid-item-8" data-id="8"></div>
+    <div class="grid-item" id="grid-item-9" data-id="9"></div>
+    <div class="grid-item" id="grid-item-10" data-id="10"></div>
+    <!-- Repeat for 100 grid items (10x10) -->
+  </div>
 
   <script>
-    // Create 100 grid items and append them to the grid container
-    const gridContainer = document.getElementById('sortableGrid');
-    for (let i = 1; i <= 100; i++) {
-      const gridItem = document.createElement('div');
-      gridItem.classList.add('grid-item');
-      gridItem.textContent = `Item ${i}`;
-      gridItem.setAttribute('data-id', i);
-      gridContainer.appendChild(gridItem);
-    }
+    // Select all draggable items
+    const draggableItems = document.querySelectorAll('.draggable-item');
+    const gridItems = document.querySelectorAll('.grid-item');
 
-    // Initialize SortableJS on the grid container
-    new Sortable(gridContainer, {
-      animation: 150, // Smooth animation for dragging
-      ghostClass: 'sortable-ghost', // Class for the item while dragging
-      dragClass: 'sortable-drag', // Class for the item being dragged
+    // Make draggable items draggable
+    draggableItems.forEach(item => {
+      item.addEventListener('dragstart', (e) => {
+        // Store the ID of the dragged item in the dataTransfer object
+        e.dataTransfer.setData('text', e.target.id);
+      });
+    });
+
+    // Allow grid items to be droppable
+    gridItems.forEach(item => {
+      item.addEventListener('dragover', (e) => {
+        e.preventDefault(); // Necessary to allow dropping
+        item.classList.add('over');
+      });
+
+      item.addEventListener('dragleave', () => {
+        item.classList.remove('over');
+      });
+
+      item.addEventListener('drop', (e) => {
+        e.preventDefault(); // Prevent default action (e.g., open as link for some browsers)
+        item.classList.remove('over');
+
+        // Get the dragged item's ID
+        const draggedItemId = e.dataTransfer.getData('text');
+        const draggedItem = document.getElementById(draggedItemId);
+
+        // Check if the grid cell is empty
+        if (!item.hasChildNodes()) {
+          // Append the dragged item to the grid cell
+          item.appendChild(draggedItem);
+        }
+      });
     });
   </script>
 
