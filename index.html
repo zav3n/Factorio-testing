@@ -40,19 +40,15 @@
       border-radius: 4px;
       padding: 5px;
       box-sizing: border-box;
-    }
-
-    .draggable-item img {
-      width: 100%;  /* Image scales to the full width of the item */
-      height: 100%; /* Image scales to the full height of the item */
-      object-fit: contain; /* Ensures the image fits without distortion */
+      background-size: cover; /* Ensures image fills the box */
+      background-position: center; /* Centers the image inside the div */
     }
 
     .draggable-item:active {
       cursor: grabbing;
     }
 
-    /* The 20x20 grid*/
+    /* The 20x20 grid */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(20, 25px);
@@ -110,8 +106,8 @@
   <script>
     // Example data for different types of draggable items with custom sizes
     const draggableItemsData = [
-      { id: 'belt', label: 'Belt 1', imgSrc: 'https://cdn.factorio.com/assets/img/blog/fff-269-04-small-straight.gif', size: 'small' },
-      { id: 'assembling-machine', label: 'AM 1', imgSrc: 'https://wiki.factorio.com/images/Assembling_machine_2_entity_anim.gif', size: 'large' },
+      { id: 'belt', imgSrc: 'https://cdn.factorio.com/assets/img/blog/fff-269-04-small-straight.gif', size: 'small' },
+      { id: 'assembling-machine', imgSrc: 'https://wiki.factorio.com/images/Assembling_machine_2_entity_anim.gif', size: 'large' },
       // Add more items as needed
     ];
 
@@ -123,15 +119,8 @@
       draggableItem.id = itemData.id;
       draggableItem.draggable = true;
 
-      const img = document.createElement('img');
-      img.src = itemData.imgSrc;
-      img.alt = itemData.label;
-
-      const label = document.createElement('span');
-      label.textContent = itemData.label;
-
-      draggableItem.appendChild(img);
-      draggableItem.appendChild(label);
+      // Set image as background of the draggable item
+      draggableItem.style.backgroundImage = `url(${itemData.imgSrc})`;
 
       draggableContainer.appendChild(draggableItem);
 
