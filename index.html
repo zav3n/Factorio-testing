@@ -53,12 +53,12 @@
       display: grid;
       grid-template-columns: repeat(20, 25px);
       grid-template-rows: repeat(20, 25px);
-      gap: 5px;
+      gap: 0px; /* Remove gaps between grid items */
       width: 540px;
       height: 540px;
       margin-left: 20px;
-      border: 2px solid #333;
-      padding: 10px;
+      border: 0px solid #333; /* Remove border */
+      padding: 0px; /* Remove padding */
       background-color: #f7f7f7;
     }
 
@@ -66,14 +66,13 @@
       width: 25px;
       height: 25px;
       background-color: lightgray;
-      border: 1px solid #ccc;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       user-select: none;
-      border-radius: 4px;
-      position: relative; /* To position the dragged item */
+      position: relative;
+      box-sizing: border-box;
     }
 
     .grid-item.over {
