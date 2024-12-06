@@ -65,4 +65,22 @@
 
   <script>
     // Create 100 grid items and append them to the grid container
-    const gri
+    const gridContainer = document.getElementById('sortableGrid');
+    for (let i = 1; i <= 100; i++) {
+      const gridItem = document.createElement('div');
+      gridItem.classList.add('grid-item');
+      gridItem.textContent = `Item ${i}`;
+      gridItem.setAttribute('data-id', i);
+      gridContainer.appendChild(gridItem);
+    }
+
+    // Initialize SortableJS on the grid container
+    new Sortable(gridContainer, {
+      animation: 150, // Smooth animation for dragging
+      ghostClass: 'sortable-ghost', // Class for the item while dragging
+      dragClass: 'sortable-drag', // Class for the item being dragged
+    });
+  </script>
+
+</body>
+</html>
