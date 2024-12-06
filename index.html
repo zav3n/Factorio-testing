@@ -66,7 +66,7 @@
       width: 25px;
       height: 25px;
       background-color: lightgray;
-      border: 0px solid #ccc;
+      border: 1px solid #ccc;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -165,11 +165,9 @@
           // Append the dragged item and ensure its size doesn't change
           gridItem.appendChild(draggedItem);
 
-          // Explicitly set the dragged item's dimensions to its original size
-          const sizeClass = draggedItem.classList.contains('large-item') ? 'large-item' : 'small-item';
-          draggedItem.style.width = ''; // Reset any width set during drag/drop
-          draggedItem.style.height = ''; // Reset any height set during drag/drop
-          draggedItem.classList.add(sizeClass);
+          // Ensuring the item keeps its size after being dropped (important)
+          draggedItem.style.width = ''; // Reset width, ensuring it's its original size
+          draggedItem.style.height = ''; // Reset height, ensuring it's its original size
         }
       });
     }
