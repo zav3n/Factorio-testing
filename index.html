@@ -42,20 +42,21 @@
       box-sizing: border-box;
     }
 
-    .draggable-item img {
-      width: 30px; /* Adjust as needed */
-      height: 30px; /* Adjust as needed */
+    }.draggable-item img {
+      width: 100%;  /* Image scales to the full width of the item */
+      height: 100%; /* Image scales to the full height of the item */
+      object-fit: contain; /* Ensures the image fits within the container without distortion */
     }
 
     .draggable-item:active {
       cursor: grabbing;
     }
 
-    /* The 10x10 grid */
+    /* The 20x20 grid*/
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(10, 50px);
-      grid-template-rows: repeat(10, 50px);
+      grid-template-columns: repeat(20, 25px);
+      grid-template-rows: repeat(20, 25px);
       gap: 5px;
       width: 540px;
       height: 540px;
@@ -66,8 +67,8 @@
     }
 
     .grid-item {
-      width: 50px;
-      height: 50px;
+      width: 25px;
+      height: 25px;
       background-color: lightgray;
       border: 1px solid #ccc;
       display: flex;
@@ -96,7 +97,7 @@
 </head>
 <body>
 
-  <h1>Drag and Drop to the 10x10 Grid</h1>
+  <h1>Drag and Drop to the 20x20 Grid</h1>
 
   <div class="draggable-container" id="draggable-container">
     <!-- Draggable items will be generated here by JavaScript -->
@@ -111,9 +112,6 @@
     const draggableItemsData = [
       { id: 'belt', label: 'Belt 1', imgSrc: 'https://cdn.factorio.com/assets/img/blog/fff-269-04-small-straight.gif', size: 'small' },
       { id: 'assembling-machine', label: 'AM 1', imgSrc: 'https://wiki.factorio.com/images/Assembling_machine_2_entity_anim.gif', size: 'large' },
-      { id: 'item3', label: 'Item 3', imgSrc: 'https://via.placeholder.com/30', size: 'small' },
-      { id: 'item4', label: 'Item 4', imgSrc: 'https://via.placeholder.com/30', size: 'normal' },
-      { id: 'item5', label: 'Item 5', imgSrc: 'https://via.placeholder.com/30', size: 'large' },
       // Add more items as needed
     ];
 
@@ -145,8 +143,8 @@
 
     // Dynamically generate grid items (10x10)
     const gridContainer = document.getElementById('grid');
-    const rows = 10;
-    const cols = 10;
+    const rows = 20;
+    const cols = 20;
     const totalItems = rows * cols;
 
     for (let i = 0; i < totalItems; i++) {
